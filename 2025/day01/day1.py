@@ -1,7 +1,7 @@
 import argparse
 import numpy as np
 
-def read_file(file_path:str):
+def load_input(file_path:str) -> list[int]:
     turns = []
     with open(file_path, 'r') as file:
         data = file.readlines()
@@ -13,20 +13,20 @@ def read_file(file_path:str):
                 turns.append(int(r[1:]))
     return turns
 
-def crack_password_part1(turns:list, start:int=50):
+def crack_password_part1(turns:list[int], start:int=50) -> int:
     idx = start
     password = 0
     for turn in turns:
         idx += turn%100
         if idx > 99:
-            idx = idx - 100
+            idx -= 100
         elif idx < 0:
-            idx = 100 + idx
+            idx += 100
         if idx == 0:
             password += 1
     return password
 
-def crack_password_part2(turns:list, start:int=50):
+def crack_password_part2(turns:list[int], start:int=50) -> int:
     idx = start
     password = 0
     for turn in turns:
@@ -40,11 +40,11 @@ def crack_password_part2(turns:list, start:int=50):
         password += rotations
         idx += np.sign(turn) * (abs(turn)%100)
         if idx > 100:
-            idx = idx - 100
+            idx -= 100
             if update:
                 password += 1
         elif idx < 0:
-            idx = 100 + idx
+            idx += 100
             if update:
                 password += 1
         elif idx == 0 or idx == 100:
@@ -56,15 +56,12 @@ def main():
     parser = argparse.ArgumentParser(description="Crack the password.")
     parser.add_argument('-i','--input', type=str, required=True, help='Path to the input file containing turns.')
     parser.add_argument('-s','--start', type=int, default=50, help='Starting position for cracking the password.')
-    parser.add_argument('-p','--part', type=int, choices=[1, 2], default=1, help='Part of the challenge to solve (1 or 2).')
     args = parser.parse_args()
 
-    turns = read_file(args.input)
-    if args.part == 1:
-        password = crack_password_part1(start=args.start, turns=turns)
-    else:
-        password = crack_password_part2(start=args.start, turns=turns)
-    print(f"The cracked password is: {password}")
+    turns = load_input(args.input)
+    password1 = crack_password_part1(start=args.start, turns=turns)
+    password2 = crack_password_part2(start=args.start, turns=turns)
+    print(f"The cracked passwords are {password1} for part 1 and {password2} for part 2")
 
 if __name__ == "__main__":
     main()
