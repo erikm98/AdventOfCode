@@ -76,7 +76,7 @@ def fewest_presses_joltages(joltages: list[np.ndarray], switches: list[np.ndarra
     return int(presses)
 
 def main():
-    parser = argparse.ArgumentParser(description="Advent of Code 2025 - Day 10")
+    parser = argparse.ArgumentParser(description="Switch on the lights with fewest button presses.")
     parser.add_argument('-i', '--input_file', type=str, help='Path to the input file')
     args = parser.parse_args()
 
